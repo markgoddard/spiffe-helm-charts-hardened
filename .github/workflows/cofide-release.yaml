@@ -37,7 +37,7 @@ jobs:
           version: v1.8.1
           charts_dir: charts
           # Don't upload the index to this repository.
-          skip_upload: true
+          #skip_upload: true
           #repository: markgoddard/helm-charts
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
