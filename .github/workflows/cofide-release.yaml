@@ -49,7 +49,7 @@ jobs:
             --fail \
             -H "Accept: application/vnd.github.v3+json" \
             -H "Authorization: token ${{ secrets.HELM_CHARTS_TOKEN }}" \
-            https://api.github.com/repos/${{ github.organisation }}/helm-charts/dispatches \
+            https://api.github.com/repos/${{ github.repository_owner }}/helm-charts/dispatches \
             -d '{\
             "event_type": "charts-updated",\
             "client_payload": {\
