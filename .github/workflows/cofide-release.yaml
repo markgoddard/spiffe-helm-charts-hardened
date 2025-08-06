@@ -23,12 +23,12 @@ jobs:
         with:
           version: 'latest'
 
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+      #- name: Login to GitHub Container Registry
+      #  uses: docker/login-action@v3
+      #  with:
+      #    registry: ghcr.io
+      #    username: ${{ github.actor }}
+      #    password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Run chart-releaser to package and release Helm charts
         #uses: cofide/chart-releaser-action@feat/allow-different-repo
@@ -44,8 +44,16 @@ jobs:
 
       - name: Trigger index update in helm-charts repository
         run: |
-          curl -X POST \
+          curl \
+            -X POST \
+            --fail \
             -H "Accept: application/vnd.github.v3+json" \
             -H "Authorization: token ${{ secrets.HELM_CHARTS_TOKEN }}" \
             https://api.github.com/repos/${{ github.organisation }}/helm-charts/dispatches \
-            -d '{"event_type":"charts-updated","client_payload":{"repository":"${{ github.repository }}"}}'
+            -d '{\
+            "event_type": "charts-updated",\
+            "client_payload": {\
+              "repository": "${{ github.repository }}",\
+              "changed_charts": "${{ steps.cr.changed_charts }}"\
+            }\
+          }'
