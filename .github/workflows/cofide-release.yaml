@@ -1,0 +1,40 @@
+name: publish-helm-chart
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure Git
+        run: |
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+
+      - name: Install Helm
+        uses: azure/setup-helm@v4.2.0
+        with:
+          version: 'latest'
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run chart-releaser to package and release Helm charts
+        uses: cofide/chart-releaser-action@feat/allow-different-repo
+        with:
+          charts_dir: charts
+          repository: markgoddard/helm-charts
+        env:
+          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+
