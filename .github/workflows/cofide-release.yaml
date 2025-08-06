@@ -31,10 +31,11 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Run chart-releaser to package and release Helm charts
-        uses: cofide/chart-releaser-action@feat/allow-different-repo
+        #uses: cofide/chart-releaser-action@feat/allow-different-repo
+        uses: helm/chart-releaser-action@v1.7.0
         with:
           charts_dir: charts
-          repository: markgoddard/helm-charts
+          #repository: markgoddard/helm-charts
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
